@@ -117,13 +117,22 @@ function loadNote(index) {
         }
     }
     selectedNote = index
-    noteTitleElement.textContent = notesList[index].name
+    noteTitleElement.value = notesList[index].name
     noteTextAreaElement.value = notesList[index].content
     save()
 }
 
 noteTextAreaElement.addEventListener("input", function() {
     notesList[selectedNote].content = noteTextAreaElement.value
+    save()
+})
+
+noteTitleElement.addEventListener("input", function() {
+    notesList[selectedNote].name = noteTitleElement.value
+    notesListElement.children[selectedNote].removeChild(notesListElement.children[selectedNote].firstChild)
+    let tempNoteSpanElem = noteSpanElement.cloneNode(true)
+    tempNoteSpanElem.textContent = noteTitleElement.value
+    notesListElement.children[selectedNote].prepend(tempNoteSpanElem)
     save()
 })
 
