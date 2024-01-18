@@ -28,16 +28,20 @@ noteSpanElement.classList.add("text-sm", "text-yellow-900", "select-none")
 
 function loadNotes() {
     let item = localStorage.getItem("notes-data")
+    if (!item) {
+        newNote()
+        return
+    }
     let jsonObj = JSON.parse(item)
-    jsonObj.forEach((i, index) => {
+    if (!jsonObj["notesList"]) return
+    jsonObj["notesList"].forEach((i, index) => {
         let note = Note.from(i)
         notesList.push(note)
         addNote(note, index)
     })
-    if (notesList.length == 0) {
-        newNote()
-    }
+    loadNote(jsonObj["selectedIndex"])
 }
+
 function newNote() {
     let note = new Note()
     note.name = `Note ${notesList.length + 1}`
@@ -87,11 +91,15 @@ function reloadNotes() {
 
 function loadNote(index) {
     if (index == -1) {
-        noteTextAreaElement.classList.add("hidden")
-        noteTitleElement.textContent = ""
-        noteTextAreaElement.value = ""
-        selectedNote = -1
-        return
+        if (notesList.length > 0) {
+            index = 0
+        } else {
+            noteTextAreaElement.classList.add("hidden")
+            noteTitleElement.value = ""
+            noteTextAreaElement.value = ""
+            selectedNote = -1
+            return    
+        }
     }
     for (child of notesListElement.children) {
         if (child.getAttribute("note-index") == selectedNote) {
@@ -109,13 +117,12 @@ function loadNote(index) {
         }
     }
     selectedNote = index
-    noteTextAreaElement.classList.remove("hidden")
     noteTitleElement.textContent = notesList[index].name
     noteTextAreaElement.value = notesList[index].content
+    save()
 }
 
 noteTextAreaElement.addEventListener("input", function() {
-    // Save
     notesList[selectedNote].content = noteTextAreaElement.value
     save()
 })
@@ -139,5 +146,9 @@ document.getElementById("note-sidebar-button").addEventListener("click", functio
 loadNotes()
 
 function save() {
-    localStorage.setItem("notes-data", JSON.stringify(notesList))
+    let json = {
+        "selectedIndex": selectedNote,
+        "notesList": notesList
+    }
+    localStorage.setItem("notes-data", JSON.stringify(json))
 }
