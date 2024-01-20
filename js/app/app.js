@@ -1,5 +1,4 @@
-var selectedNote = -1
-var notesList = []
+var selectedID = -1
 
 const notesListElement = document.getElementById("notesList")
 const noteTitleElement = document.getElementById("note-title")
@@ -24,124 +23,118 @@ noteElement.innerHTML = `
 </svg>
 `
 const noteSpanElement = document.createElement('span')
-noteSpanElement.classList.add("text-sm", "text-yellow-900", "select-none")
+noteSpanElement.classList.add("text-sm", "text-yellow-900", "select-none", "truncate")
 
-function loadNotes() {
-    let item = localStorage.getItem("notes-data")
-    if (!item) {
-        newNote()
+var selectedElement
+
+function loadApp() {
+    if (notesMap.size == 0) {
+        newNote(reloadNotes)
         return
     }
-    let jsonObj = JSON.parse(item)
-    if (!jsonObj["notesList"]) return
-    jsonObj["notesList"].forEach((i, index) => {
-        let note = Note.from(i)
-        notesList.push(note)
-        addNote(note, index)
-    })
-    loadNote(jsonObj["selectedIndex"])
+    reload()
 }
 
-function newNote() {
-    let note = new Note()
-    note.name = `Note ${notesList.length + 1}`
-    notesList.push(note)
-    addNote(note, notesList.length - 1)
-    loadNote(notesList.length - 1)
-    save()
-}
-
-function addNote(note, index) {
-    let tempNoteElem = noteElement.cloneNode(true)
-    let tempNoteSpanElem = noteSpanElement.cloneNode(true)
-    tempNoteSpanElem.textContent = note.name
-    tempNoteElem.prepend(tempNoteSpanElem)
-    tempNoteElem.setAttribute("note-index", index)
-    tempNoteElem.addEventListener("click", function() {
-        if (index != selectedNote) {
-            loadNote(index)
-        }
-    })
-    notesListElement.appendChild(tempNoteElem)
-}
-
-function removeNote() {
-    if (selectedNote == -1){
-        return
-    }
-    if (notesList.length == 0){
-        return
-    }
-    notesList.splice(selectedNote, 1)
-    selectedNote = -1
-    loadNote(-1)
-    save()
-    reloadNotes()
-}
-
-function reloadNotes() {
+function reload() {
+    console.log("reloaded")
     notesListElement.innerHTML = ``
-    notesList.forEach((note, index) => {
-        addNote(note, index)
-    })
-    if (notesList.length == 0) {
-        newNote()
+    for (let [id, note] of notesMap.entries()) {
+        let tempNoteElem = noteElement.cloneNode(true)
+        let tempNoteSpanElem = noteSpanElement.cloneNode(true)
+        if (!note.title) {
+            if (!note.content) {
+                tempNoteSpanElem.textContent = "Untitled"
+            } else {
+                tempNoteSpanElem.textContent = note.content
+            }
+            tempNoteSpanElem.classList.add("italic")
+        } else {
+            tempNoteSpanElem.textContent = note.title
+        }
+        tempNoteElem.prepend(tempNoteSpanElem)
+        tempNoteElem.setAttribute("note-id", id)
+        tempNoteElem.addEventListener("click", function() {
+            if (id != selectedID) {
+                selectedElement.classList.remove("bg-yellow-200")
+                selectedElement.classList.remove("hover:cursor-default")
+    
+                selectedElement.classList.add("hover:cursor-pointer")
+                selectedElement.classList.add("hover:bg-yellow-200")
+                loadContent(id)
+            }
+        })
+        notesListElement.appendChild(tempNoteElem)
     }
+    if (selectedID == -1) {
+        let id = localStorage.getItem("selected-id")
+        if (id) {
+            id = id / 1
+            if (notesMap.get(id) == undefined) {
+                id = notesMap.keys().next().value
+            }
+        }
+        loadContent(id)
+    }
+    save()
 }
 
-function loadNote(index) {
-    if (index == -1) {
-        if (notesList.length > 0) {
-            index = 0
-        } else {
-            noteTextAreaElement.classList.add("hidden")
-            noteTitleElement.value = ""
-            noteTextAreaElement.value = ""
-            selectedNote = -1
-            return    
-        }
-    }
+function loadContent(id) {
     for (child of notesListElement.children) {
-        if (child.getAttribute("note-index") == selectedNote) {
-            child.classList.remove("bg-yellow-200")
-            child.classList.remove("hover:cursor-default")
-
-            child.classList.add("hover:cursor-pointer")
-            child.classList.add("hover:bg-yellow-200")
-        } else if (child.getAttribute("note-index") == index) {
+        if (child.getAttribute("note-id") == id) {
             child.classList.remove("hover:cursor-pointer")
             child.classList.remove("hover:bg-yellow-200")
 
             child.classList.add("bg-yellow-200")
             child.classList.add("hover:cursor-default")
+            selectedElement = child
+            break
         }
     }
-    selectedNote = index
-    noteTitleElement.value = notesList[index].name
-    noteTextAreaElement.value = notesList[index].content
+    selectedID = id
+    noteTitleElement.value = notesMap.get(id).title
+    noteTextAreaElement.value = notesMap.get(id).content
     save()
 }
 
-noteTextAreaElement.addEventListener("input", function() {
-    notesList[selectedNote].content = noteTextAreaElement.value
-    save()
-})
+function save() {
+    localStorage.setItem("selected-id", selectedID)
+}
 
-noteTitleElement.addEventListener("input", function() {
-    notesList[selectedNote].name = noteTitleElement.value
-    notesListElement.children[selectedNote].removeChild(notesListElement.children[selectedNote].firstChild)
-    let tempNoteSpanElem = noteSpanElement.cloneNode(true)
-    tempNoteSpanElem.textContent = noteTitleElement.value
-    notesListElement.children[selectedNote].prepend(tempNoteSpanElem)
-    save()
-})
+function removeNote() {
+    if (notesMap.size == 0) {
+        return
+    }
+    let id = selectedID
+    if (notesMap.size - 1 == 0) {
+        selectedID = -1
+        deleteNote(id, function() { newNote(reloadNotes) })
+    } else {
+        deleteNote(id, function() {
+            loadNotes(function() {
+                id = Array.from(notesMap.keys()).pop()
+                reload()
+                loadContent(id)
+            })
+        })
+    }
+}
 
-document.getElementById("note-add").addEventListener("click", function() {
-    newNote()
-})
+function reloadNotes() {
+    loadNotes(reload)
+}
 
 document.getElementById("note-trash").addEventListener("click", function() {
     removeNote()
+})
+
+document.getElementById("note-add").addEventListener("click", function() {
+    newNote(function() {
+        loadNotes(function() {
+            id = Array.from(notesMap.keys()).pop()
+            reload()
+            loadContent(id)
+        })
+    })
 })
 
 document.getElementById("note-sidebar-button").addEventListener("click", function() {
@@ -152,12 +145,37 @@ document.getElementById("note-sidebar-button").addEventListener("click", functio
     }
 })
 
-loadNotes()
-
-function save() {
-    let json = {
-        "selectedIndex": selectedNote,
-        "notesList": notesList
+noteTextAreaElement.addEventListener("input", function() {
+    notesMap.get(selectedID).content = noteTextAreaElement.value
+    if (!noteTitleElement.value) {
+        updateTitle()
     }
-    localStorage.setItem("notes-data", JSON.stringify(json))
+    saveNote(selectedID)
+})
+
+noteTitleElement.addEventListener("input", function() {
+    notesMap.get(selectedID).title = noteTitleElement.value
+    updateTitle()
+    saveNote(selectedID)
+})
+
+function updateTitle() {
+    selectedElement.removeChild(selectedElement.firstChild)
+    let tempNoteSpanElem = noteSpanElement.cloneNode(true)
+    if (!noteTitleElement.value) {
+        if (!noteTextAreaElement.value) {
+            tempNoteSpanElem.textContent = "Untitled"
+        } else {
+            tempNoteSpanElem.textContent = noteTextAreaElement.value
+        }
+        tempNoteSpanElem.classList.add("italic")
+    } else {
+        tempNoteSpanElem.textContent = noteTitleElement.value
+        if (tempNoteSpanElem.classList.contains("italic")) {
+            tempNoteSpanElem.classList.remove("bg-yellow-200")
+        }
+    }
+    child.prepend(tempNoteSpanElem)
 }
+
+loadNotes(loadApp)

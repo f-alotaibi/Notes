@@ -1,6 +1,6 @@
 class Note {
     constructor() {
-        this.name = ""
+        this.title = ""
         this.content = ""
     }
     static from(json){

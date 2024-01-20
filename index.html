@@ -5,6 +5,7 @@
         <title>Notes</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="js/app/notes.js"></script> 
+        <script src="js/app/notes-database.js"></script> 
     </head>
     <body>
         <div class="flex h-screen w-full bg-yellow-100">
@@ -55,7 +56,7 @@
                 </button>
                 <input type="text" id="note-title" class="text-lg font-semibold text-yellow-900 bg-transparent outline-none w-full">
                 <div class="ml-auto flex space-x-2">
-                  <button id="note-add" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start text-yellow-900">
+                  <button id="note-add" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 py-2 justify-start text-yellow-900">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -71,9 +72,9 @@
                       <path d="M5 12h14"></path>
                       <path d="M12 5v14"></path>
                     </svg>
-                    <span class="ml-2">Add Note</span>
+                    <span class="ml-2 hidden md:block">Add Note</span>
                   </button>
-                  <button id="note-trash" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start text-yellow-900">
+                  <button id="note-trash" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 pr-4 py-2 justify-start text-yellow-900">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -90,7 +91,7 @@
                       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
                       <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                     </svg>
-                    <span class="ml-2">Trash</span>
+                    <span class="ml-2 hidden md:block">Trash</span>
                   </button>
                 </div>
               </div>
