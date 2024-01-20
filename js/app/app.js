@@ -29,7 +29,13 @@ var selectedElement
 
 function loadApp() {
     if (notesMap.size == 0) {
-        newNote(reloadNotes)
+        newNote(function() {
+            loadNotes(function() {
+                id = Array.from(notesMap.keys()).pop()
+                reload()
+                loadContent(id)
+            })
+        })
         return
     }
     reload()
@@ -107,7 +113,7 @@ function removeNote() {
     let id = selectedID
     if (notesMap.size - 1 == 0) {
         selectedID = -1
-        deleteNote(id, function() { newNote(reloadNotes) })
+        deleteNote(id, function() { newNote(function() { loadNotes(reload) }) })
     } else {
         deleteNote(id, function() {
             loadNotes(function() {
@@ -117,10 +123,6 @@ function removeNote() {
             })
         })
     }
-}
-
-function reloadNotes() {
-    loadNotes(reload)
 }
 
 document.getElementById("note-trash").addEventListener("click", function() {
