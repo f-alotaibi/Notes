@@ -72,8 +72,8 @@ function reload() {
             if (notesMap.get(id) == undefined) {
                 id = notesMap.keys().next().value
             }
+            loadContent(id)
         }
-        loadContent(id)
     }
     save()
 }
