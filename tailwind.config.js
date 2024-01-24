@@ -8,7 +8,6 @@ module.exports = {
     'justify-between',
     'px-2',
     'py-1',
-    'rounded-lg',
     'hover:bg-yellow-200',
     'hover:cursor-pointer',
     // Note elem svg
