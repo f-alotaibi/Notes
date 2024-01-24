@@ -11,10 +11,10 @@
         <script src="js/app/notes-database.min.js"></script> 
         <link rel="stylesheet" href="tailwind.min.css">
     </head>
-    <body>
-        <div class="flex h-screen w-full bg-yellow-100">
-            <div id="note-sidebar" class="flex flex-col w-72 bg-yellow-50 hidden md:block">
-              <div class="flex items-center h-16 px-6 bg-yellow-50">
+    <body class="bg-yellow-50">
+        <div class="flex h-screen w-full">
+            <div id="note-sidebar" class="flex flex-col w-72 hidden md:block">
+              <div class="flex items-center h-16 px-6">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -39,8 +39,8 @@
               </div>
             </div>
             <div class="flex flex-col flex-1 overflow-hidden">
-              <div class="flex items-center h-16 px-2 border-b border-yellow-200 bg-yellow-50">
-                <button id="note-sidebar-button" class="inline-flex items-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none h-10 px-4 py-2 justify-start">
+              <div class="flex items-center h-16 px-2 border-b border-yellow-200">
+                <button id="note-sidebar-button" aria-label="Sidebar" class="inline-flex items-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none h-10 px-2 py-2 justify-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -58,9 +58,9 @@
                     <line x1="4" x2="20" y1="18" y2="18"></line>
                   </svg>
                 </button>
-                <input type="text" id="note-title" class="text-lg font-semibold text-yellow-900 bg-transparent outline-none w-full">
-                <div class="ml-auto flex space-x-2">
-                  <button id="note-add" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 py-2 justify-start text-yellow-900">
+                <input type="text" id="note-title" aria-label="Write a title" placeholder="Write a title" class="text-lg font-semibold text-yellow-900 bg-transparent outline-none w-full">
+                <div class="ml-auto flex space-x-2 px-2">
+                  <button id="note-add" aria-label="Add Note" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 py-2 justify-start text-yellow-900">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -78,7 +78,7 @@
                     </svg>
                     <span class="ml-2 hidden md:block">Add Note</span>
                   </button>
-                  <button id="note-trash" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 pr-4 py-2 justify-start text-yellow-900">
+                  <button id="note-trash" aria-label="Trash" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-1 py-2 justify-start text-yellow-900">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -99,7 +99,7 @@
                   </button>
                 </div>
               </div>
-              <div class="flex-1 overflow-y-hidden p-6 space-y-4">
+              <div class="flex-1 bg-yellow-100 overflow-y-hidden p-6 space-y-4">
                 <textarea placeholder="Write anything..." id="note-textarea" class="text-sm text-yellow-900 resize-none bg-transparent outline-none w-[100%] h-[100%]"></textarea>
               </div>
             </div>
