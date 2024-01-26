@@ -140,7 +140,8 @@ document.getElementById("note-add").addEventListener("click", function() {
 })
 
 document.getElementById("note-sidebar-button").addEventListener("click", function() {
-    if (document.getElementById("note-sidebar").style.display == "none") {
+    let computedStyle = window.getComputedStyle(document.getElementById("note-sidebar")).display
+    if (computedStyle == "none") {
         document.getElementById("note-sidebar").style.display = "block"
     } else {
         document.getElementById("note-sidebar").style.display = "none"
@@ -159,6 +160,10 @@ noteTitleElement.addEventListener("input", function() {
     notesMap.get(selectedID).title = noteTitleElement.value
     updateTitle()
     saveNote(selectedID)
+})
+
+document.getElementById("note-sidebar-close").addEventListener("click", function() {
+    document.getElementById("note-sidebar").style.display = "none"
 })
 
 function updateTitle() {

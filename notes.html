@@ -13,9 +13,10 @@
     </head>
     <body class="bg-yellow-50">
         <div class="flex h-screen w-full">
-            <div id="note-sidebar" class="flex flex-col w-72 hidden md:block">
+            <div id="note-sidebar" class="bg-yellow-50 flex flex-col w-screen h-screen hidden fixed md:w-72 md:static md:block">
               <div class="flex items-center h-16 px-6">
-                <svg
+                <div class="flex flex-inline items-center w-full">
+                  <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -31,6 +32,24 @@
                   <path d="M15 3v6h6"></path>
                 </svg>
                 <h1 class="ml-2 text-lg font-semibold text-yellow-900">Notes</h1>
+                </div>
+                <button id="note-sidebar-close" aria-label="Close sidebar" class="inline-flex items-center h-10 px-1 py-2 block md:hidden">
+                  <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-yellow-500"
+                >
+                <path stroke='none' d='M0 0h24v24H0z'/>
+                <path d='M6 6L18 18M6 18L18 6'/>
+                </svg>
+                </button>
               </div>
               <div class="flex-1 overflow-y-auto border-r border-yellow-200">
                 <div></div>
